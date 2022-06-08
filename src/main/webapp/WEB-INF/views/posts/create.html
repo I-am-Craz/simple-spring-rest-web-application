@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.com">
+<th:block th:replace="fragments/head.html :: head"/>
+<body>
+    <main>
+        <section class="centered-column">
+            <menu class="centered-row w-100">
+                <menuitem>
+                    <a href="/profile">Profile</a>
+                </menuitem>
+                <menuitem>
+                    <a href="/posts">Posts</a>
+                </menuitem>
+            </menu>
+            <form  class="centered-column w-100" th:method="POST" th:action="@{/posts}" th:object="${post}">
+                <input class="w-100" type="text" th:field="*{title}" placeholder="Title">
+                <textarea class="w-100" cols="30" rows="10" th:field="*{content}" placeholder="Content"></textarea>
+                <input class="w-100" type="text" th:field="*{image}" placeholder="Image URL">
+                <button type="submit" class="btn w-100">Create</button>
+            </form>
+        </section>
+    </main>
+    <script th:src="@{/resources/js/index.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+</html>

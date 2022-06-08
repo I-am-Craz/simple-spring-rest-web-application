@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<th:block th:replace="fragments/head.html :: head"/>
+<body>
+    <main>
+        <section>
+            <menu class="w-100 centered-row mt-3">
+                <menuitem>
+                    <a href="/profile">Profile</a>
+                </menuitem>
+                <menuitem>
+                    <a href="/posts/create">Create a post</a>
+                </menuitem>
+                <menuitem>
+                    <a href="/users">View all users</a>
+                </menuitem>
+            </menu>
+            <ul class="post-list" th:if="${posts.size() > 0}">
+                <li class="post-list-item" th:each="post : ${posts}">
+                    <div class="post-list-item__img">
+                        <img th:src="${post.getImage()}">
+                    </div>
+                    <div class="post-list-item__content p-3 centered-column">
+                        <h3 th:text="${post.getTitle()}">title</h3>
+                        <p th:text="${post.getContent().substring(0, 100)} + '...'">content</p>
+                        <a class=" text-center" th:href="@{/posts/{id}(id=${post.getId()})}">view</a>
+                    </div>
+                </li>
+            </ul>
+            <h2 th:unless="${posts.size() > 0}" class="text-center">No posts.</h2>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+</html>

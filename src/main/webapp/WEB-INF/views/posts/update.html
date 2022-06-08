@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.com">
+<th:block th:replace="fragments/head :: head"/>
+<body>
+    <main>
+        <section class="centered-column h-100">
+            <menu class="centered-row w-100">
+                <menuitem>
+                    <a href="/profile">Profile</a>
+                </menuitem>
+                <menuitem>
+                    <a href="/posts">Posts</a>
+                </menuitem>
+                <menuitem>
+                    <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
+                        <button type="submit" class="no-bg no-border">Delete</button>
+                    </form>
+                </menuitem>
+            </menu>
+            <form  class="centered-column w-100" th:method="PATCH" th:action="@{/posts/{id}(id=${post.getId()})}" th:object="${post}">
+                <input type="text" class="w-100" th:field="*{title}" placeholder="Title">
+                <textarea cols="30" rows="10" class="w-100" th:field="*{content}" placeholder="Content"></textarea>
+                <input type="text" class="w-100" th:field="*{image}" placeholder="Image URL">
+                <button type="submit" class="btn w-100">Update</button>
+            </form>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+</html>

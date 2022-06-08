@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<th:block th:replace="fragments/head.html :: head"/>
+<body>
+    <main>
+        <section class="centered-column">
+            <menu class="centered-row w-25">
+                <menuitem>
+                    <a href="/">Home</a>
+                </menuitem>
+                <menuitem>
+                    <a href="/login">Login</a>
+                </menuitem>
+            </menu>
+            <form th:method="POST" th:action="@{/signup}" th:object="${user}">
+                <div class="mb-3">
+                    <label for="username" class="form-label w-100">Username
+                        <input required="required" title="1 character minimum" type="text" th:field="*{username}" id="username" class="form-control" aria-describedby="username">
+                    </label>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label w-100">Email
+                        <input required="required" type="email" th:field="*{email}" id="email" class="form-control" aria-describedby="username">
+                    </label>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label w-100">Password
+                        <input required="required" type="password" th:field="*{password}" title="8 to 24 character" id="password" class="form-control" aria-describedby="username">
+                    </label>
+                </div>
+                <br>
+                <button type="submit" class="btn w-100">Signup</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
