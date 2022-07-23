@@ -2,25 +2,38 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.com">
 <th:block th:replace="fragments/head.html :: head"/>
 <body>
-    <main>
-        <section class="centered-column">
-            <menu class="centered-row w-100">
-                <menuitem>
-                    <a href="/profile">Profile</a>
-                </menuitem>
-                <menuitem>
-                    <a href="/posts">Posts</a>
-                </menuitem>
-            </menu>
+    <header class="centered-row header">
+        <menu class="centered-row w-100 menu">
+            <menuitem>
+                <a href="/users/me">Manage an account</a>
+            </menuitem>
+            <menuitem>
+                <a href="/profile">Profile</a>
+            </menuitem>
+            <menuitem>
+                <a href="/posts">View all posts</a>
+            </menuitem>
+            <menuitem>
+                <a href="/users">View all users</a>
+            </menuitem>
+            <menuitem>
+                <a href="/logout">Logout</a>
+            </menuitem>
+        </menu>
+    </header>
+    <main class="post">
+        <section class="centered-column post-content">
             <form  class="centered-column w-100" th:method="POST" th:action="@{/posts}" th:object="${post}">
-                <input class="w-100" type="text" th:field="*{title}" placeholder="Title">
-                <textarea class="w-100" cols="30" rows="10" th:field="*{content}" placeholder="Content"></textarea>
-                <input class="w-100" type="text" th:field="*{image}" placeholder="Image URL">
+                <input class="w-100 post-content__title" type="text" th:field="*{title}" placeholder="Title" required="required" pattern="[A-Za-z0-9_\s,.?!-]{1,255}"
+                       title="Only letters (either case), numbers, and some special characters (A-Za-z0-9_\s,.?!-); the length must be between 1 and 255 characters.">
+                <textarea class="w-100 post-content__content" cols="30" rows="10" th:field="*{content}" placeholder="Content" required="required" title="The length must be between 100 and 5000."
+                minlength="100" maxlength="5000">content</textarea>
+                <input class="w-100 post-content__image" type="url" th:field="*{imageLink}" placeholder="Image URL" required="required" pattern="http(s?)(:\/\/).{1,255}"
+                       title="The length must be between 1 and 255 characters.">
                 <button type="submit" class="btn w-100">Create</button>
             </form>
         </section>
     </main>
-    <script th:src="@{/resources/js/index.js}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

@@ -2,41 +2,52 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <th:block th:replace="fragments/head.html :: head"></th:block>
 <body>
+    <header class="centered-row header">
+        <menu class="centered-row w-100 menu">
+            <menuitem>
+                <a href="/users/me">Manage an account</a>
+            </menuitem>
+            <menuitem>
+                <a href="/profile">Profile</a>
+            </menuitem>
+            <menuitem>
+                <a href="/posts/create">Create a post</a>
+            </menuitem>
+            <menuitem>
+                <a href="/posts">View all posts</a>
+            </menuitem>
+            <menuitem>
+                <a href="/users">View all users</a>
+            </menuitem>
+            <menuitem>
+                <a href="/logout">Logout</a>
+            </menuitem>
+        </menu>
+    </header>
     <main>
         <section class="centered-column text-center">
-            <menu class="centered-row w-100">
-                <menuitem>
-                    <a href="/profile">Profile</a>
-                </menuitem>
-                <menuitem>
-                    <a href="/posts">Posts</a>
-                </menuitem>
-                <menuitem>
-                    <a href="/logout">Logout</a>
-                </menuitem>
-            </menu>
             <div>
                 <h1 th:text="'This is' + ' ' + ${user.getUsername()}">user</h1>
                 <h2 th:if="${user.getPosts().size() > 0}" th:text="'and there are' + ' ' + ${user.getUsername().trim()} + '\'s' + ' ' + 'posts here'">subtitle</h2>
                 <h2 th:unless="${user.getPosts().size() > 0}" th:text="${user.getUsername()} + ' has yet to write any post.'">subtitle</h2>
             </div>
             <ul class="post-list">
-                <li class="post-list-item" th:each="post : ${user.getPosts()}">
-                    <div class="post-list-item__img">
-                        <img th:src="${post.getImage()}">
+                <li class="post-list__item" th:each="post : ${user.getPosts()}">
+                    <div class="post-list__item-image">
+                        <img th:src="${post.getImageLink()}">
                     </div>
-                    <div class="post-list-item__content centered-column p-3">
-                        <h3 th:text="${post.getTitle()}">title</h3>
-                        <p th:text="${post.getContent().substring(0, 100)} + '...'">content</p>
-                        <a class="btn rounded-pill w-100" th:href="@{/posts/{id}(id=${post.getId()})}">view</a>
+                    <div class="post-list__item-content centered-column p-3">
+                        <h3 th:text="${post.getTitle()}" class="post-list__item-content__title">title</h3>
+                        <p th:text="${post.getContent().substring(0,100) + '...'}" class="post-list__item-content_content">content</p>
+                        <a class="btn rounded-pill w-100 post-list__item-content__link" th:href="@{/posts/{id}(id=${post.getId()})}">view</a>
                     </div>
                 </li>
             </ul>
             <div>
-                <h3 th:text="'and this is' + ' ' + ${user.getUsername().trim()} + '\'s' + ' ' + 'email' + ' ' + ':' + ' ' + ${user.getEmail()}"></h3>
+                <h3 th:text="'And this is' + ' ' + ${user.getUsername().trim()} + '\'s' + ' ' + 'email' + ' ' + ':' + ' ' + ${user.getEmail()}"></h3>
             </div>
         </section>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

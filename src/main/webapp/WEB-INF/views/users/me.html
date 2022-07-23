@@ -2,46 +2,51 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <th:block th:replace="fragments/head.html :: head"></th:block>
 <body>
+    <header class="centered-row header">
+        <menu class="centered-row w-100 menu">
+            <menuitem>
+                <a href="/profile">Profile</a>
+            </menuitem>
+            <menuitem>
+                <a href="/posts/create">Create a post</a>
+            </menuitem>
+            <menuitem>
+                <a href="/posts">Posts</a>
+            </menuitem>
+            <menuitem>
+                <a href="/users">Users</a>
+            </menuitem>
+            <menuitem>
+                <a href="/logout">Logout</a>
+            </menuitem>
+        </menu>
+    </header>
     <main>
         <section class="centered-column">
-            <menu class="centered-row w-100">
-                <menuitem>
-                    <a href="/profile">Profile</a>
-                </menuitem>
-                <menuitem>
-                    <a href="/posts">Posts</a>
-                </menuitem>
-                <menuitem>
-                    <a href="/users">Users</a>
-                </menuitem>
-                <menuitem>
-                    <a href="/logout">Logout</a>
-                </menuitem>
-            </menu>
-            <form th:method="PATCH" th:action="@{/users/{id}(id=${user.getId()})}" th:object="${user}">
+            <form th:method="PATCH" th:action="@{/users/me/{myId}(myId=${user.getId()})}" th:object="${user}">
                 <div class="mb-3">
-                    <label for="username" class="form-label w-100">Username
-                        <input required="required" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{1,}" title="1 character minimum" type="text" th:field="*{username}" id="username" class="form-control" aria-describedby="username">
-                    </label>
+                    <label for="username" class="form-label w-100">Username </label>
+                    <input type="text" th:field="*{username}" id="username" class="form-control" required="required" pattern="[A-Za-z0-9_]{1,100}"
+                           title="Only letters (either case), numbers, and the underscore; the length must be between 1 and 100 characters.">
                 </div>
                 <div class="mb-3">
-                    <label for="email" class="form-label w-100">Email
-                        <input required="required" type="email" th:field="*{email}" id="email" class="form-control" aria-describedby="username">
-                    </label>
+                    <label for="email" class="form-label w-100">Email</label>
+                    <input type="email" th:field="*{email}" id="email" class="form-control" required="required" title="Enter a valid email address.">
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label w-100">Password
-                        <input required="required" type="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,24}$" title="8 to 24 character" th:field="*{password}" id="password" class="form-control" aria-describedby="username">
-                    </label>
+                    <label for="password" class="form-label w-100">Password</label>
+                    <input type="password" th:field="*{password}" id="password" class="form-control" required="required" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*=+-_]).{6,255}"
+                           title="At least one lowercase letter, one uppercase letter, one numeric value and one special symbol (!@#$%^&*=+-_). The length must be between 6 and 255 characters.">
                 </div>
                 <br>
                 <button type="submit" class="btn w-100">Update</button>
             </form>
             <hr>
-            <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">
-                <button type="submit" class="no-bg no-border">Delete an account.</button>
+            <form th:method="DELETE" th:action="@{/users/me/{myId}(myId=${user.getId()})}">
+                <button type="submit" class="no=bg no-border">Delete an account</button>
             </form>
         </section>
     </main>
+    <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

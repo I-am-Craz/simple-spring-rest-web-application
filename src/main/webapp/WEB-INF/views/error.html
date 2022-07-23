@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<th:block th:replace="fragments/head.html :: head"/>
+<body>
+    <main>
+        <section class="centered-column">
+            <h1>Error</h1>
+            <h2 th:text="${message}">message</h2>
+        </section>
+    </main>
+    <th:block th:replace="fragments/script.html :: script"/>
+</body>
+</html>

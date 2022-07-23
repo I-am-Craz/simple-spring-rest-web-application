@@ -14,7 +14,7 @@ public class Initializer extends AbstractAnnotationConfigDispatcherServletInitia
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{SpringConfig.class};
+        return new Class[]{WebMvcConfig.class};
     }
 
     @Override

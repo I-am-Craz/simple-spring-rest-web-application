@@ -1,12 +1,18 @@
 package org.example.config;
 
+import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
+import org.example.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.HandlerAdapter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -16,11 +22,13 @@ import com.zaxxer.hikari.HikariDataSource;
 
 
 import javax.sql.DataSource;
+import java.util.List;
+import java.util.Properties;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan("org.example")
-public class SpringConfig implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     private ApplicationContext context;
@@ -55,20 +63,8 @@ public class SpringConfig implements WebMvcConfigurer {
                 .addResourceLocations("/resources/");
     }
 
-    @Bean
-    public DataSource dataSource(){
-        HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl("jdbc:postgresql://localhost:5432/my_db");
-        hikariConfig.setDriverClassName("org.postgresql.Driver");
-        hikariConfig.setUsername("postgres");
-        hikariConfig.setPassword("postgres");
-
-        return new HikariDataSource(hikariConfig);
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
+        argumentResolvers.add(new SpecificationArgumentResolver());
     }
-
-    @Bean
-    public JdbcTemplate jdbcTemplate(){
-        return new JdbcTemplate(dataSource());
-    }
-
 }

@@ -1,34 +1,74 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.com">
 <th:block th:replace="fragments/head :: head"/>
-<body>
-    <main>
-        <section th:if="${post.getCreatorId() == user.getId()}" class="centered-column post">
-            <menu class="centered-row w-100">
-                <menuitem>
-                    <a href="/profile">Profile</a>
-                </menuitem>
-                <menuitem>
-                    <a href="/posts">Posts</a>
-                </menuitem>
-                <menuitem>
-                    <a th:href="@{/posts/{id}/update(id=${post.getId()})}">Edit</a>
-                </menuitem>
-                <menuitem>
-                    <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
-                        <button type="submit" class="no-bg no-border">Delete</button>
-                    </form>
-                </menuitem>
-            </menu>
-            <img th:src="${post.getImage()}" class="mb-3">
-            <h1 th:text="${post.getTitle()}" class="post__title">title</h1>
-            <p th:text="${post.getContent()}" class="post__content">content</p>
-        </section>
-        <section th:unless="${post.getCreatorId() == user.getId()}" class="centered-column post">
-            <h1 th:text="${post.getTitle()}" class="post__title">title</h1>
-            <p th:text="${post.getContent()}" class="post__content">content</p>
+
+<body th:if="${post.getUser().getId() == user.getId()}">
+    <header class="centered-row header">
+        <menu class="centered-row w-100 menu">
+            <menuitem>
+                <a href="/users/me">Manage an account</a>
+            </menuitem>
+            <menuitem>
+                <a href="/profile">Profile</a>
+            </menuitem>
+            <menuitem>
+                <a th:href="@{/posts/{id}/update(id=${post.getId()})}">Edit</a>
+            </menuitem>
+            <menuitem>
+                <a href="/posts">View all posts</a>
+            </menuitem>
+            <menuitem>
+                <a href="/users">View all users</a>
+            </menuitem>
+            <menuitem>
+                <a href="/logout">Logout</a>
+            </menuitem>
+            <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
+                <button type="submit" class="no-bg no-border">Delete</button>
+            </form>
+            </menuitem>
+        </menu>
+    </header>
+    <main class="post">
+        <section class="post-content centered-column">
+            <img th:src="${post.getImageLink()}" class="mb-3 w-75 post-content__image">
+            <h1 th:text="${post.getTitle()}" class="post-content__title">title</h1>
+            <p th:text="${post.getContent()}" class="post-content__content">content</p>
         </section>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 </body>
+
+<body th:unless="${post.getUser().getId() == user.getId()}">
+    <header class="centered-row header">
+        <menu class="centered-row w-100 menu">
+            <menuitem>
+                <a href="/users/me">Manage an account</a>
+            </menuitem>
+            <menuitem>
+                <a href="/profile">Profile</a>
+            </menuitem>
+            <menuitem>
+                <a href="/posts/create">Create a post</a>
+            </menuitem>
+            <menuitem>
+                <a href="/posts">View all posts</a>
+            </menuitem>
+            <menuitem>
+                <a href="/users">View all users</a>
+            </menuitem>
+            <menuitem>
+                <a href="/logout">Logout</a>
+            </menuitem>
+        </menu>
+    </header>
+    <main  class="post">
+        <section class="centered-column post-content">
+            <img th:src="${post.getImageLink()}" class="mb-3 post-content__image">
+            <h1 th:text="${post.getTitle()}" class="post-content__title">title</h1>
+            <p th:text="${post.getContent()}" class="post-content__content">content</p>
+        </section>
+    </main>
+    <th:block th:replace="fragments/script.html :: script"/>
+</body>
+
 </html>

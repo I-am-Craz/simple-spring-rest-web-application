@@ -2,27 +2,35 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <th:block th:replace="fragments/head.html :: head"></th:block>
 <body>
+    <header class="centered-row header">
+        <menu class="centered-row w-100 menu">
+            <menuitem>
+                <a href="/users/me">Manage an account</a>
+            </menuitem>
+            <menuitem>
+                <a href="/profile">Profile</a>
+            </menuitem>
+            <menuitem>
+                <a href="/posts/create">Create a post</a>
+            </menuitem>
+            <menuitem>
+                <a href="/posts">View all posts</a>
+            </menuitem>
+            <menuitem>
+                <a href="/logout">Logout</a>
+            </menuitem>
+        </menu>
+    </header>
     <main>
-        <section class="centered-column">
-            <menu class="centered-row w-100">
-                <menuitem>
-                    <a href="/profile">Profile</a>
-                </menuitem>
-                <menuitem>
-                    <a href="/posts">Posts</a>
-                </menuitem>
-                <menuitem>
-                    <a href="/logout">Logout</a>
-                </menuitem>
-            </menu>
-            <ul>
-                <li th:each="user : ${users}" style="display:flex; flex-direction: row; justify-content: space-between; width: 30%">
-                    <a th:if="${me.equals(user)}" href="/me">Me</a>
-                    <a th:unless="${me.equals(user)}" th:href="@{/users/{id}(id=${user.getId()})}" th:text="${user.getUsername()}">username</a>
+        <section class="centered">
+            <ul class="centered-column">
+                <li th:each="user : ${users}">
+                    <a th:if="${me.getUsername().equals(user.getUsername())}" href="/users/me">Me</a>
+                    <a th:unless="${me.getUsername().equals(user.getUsername())}" th:href="@{/users/{id}(id=${user.getId()})}" th:text="${user.getUsername()}">username</a>
                 </li>
             </ul>
         </section>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>
