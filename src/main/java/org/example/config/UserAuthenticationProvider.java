@@ -3,15 +3,12 @@ package org.example.config;
 import org.example.entities.User;
 import org.example.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
+import java.util.Arrays;
 import java.util.Optional;
 
 @Component
@@ -23,20 +20,20 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
-        String password = authentication.getCredentials().toString();
+    public Authentication authenticate(Authentication authentication) {
+        String username = authentication.getName();;
+        char[] password = authentication.getCredentials().toString().toCharArray();
 
         Optional<User> user = userRepository.findByUsername(username);
 
-        if(user.isEmpty()){
-            throw  new BadCredentialsException("user is not found!");
+        try{
+            if(user.isPresent() && passwordEncoder.matches(String.valueOf(password), user.get().getPassword())){
+                return new UsernamePasswordAuthenticationToken(username, String.valueOf(password));
+            }
+            else return null;
         }
-        else if(passwordEncoder.matches(password, user.get().getPassword())){
-            return new UsernamePasswordAuthenticationToken(username, password);
-        }
-        else {
-            throw new BadCredentialsException("password mismatch");
+        finally {
+            Arrays.fill(password, '0');
         }
     }
 

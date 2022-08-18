@@ -1,6 +1,5 @@
 package org.example.config;
 
-import org.example.services.implementations.UserDetailServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,23 +11,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    private DataSource dataSource;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserDetailServiceImp userDetailService;
-
+    private UserAuthenticationProvider authenticationProvider;
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception{
         httpSecurity
@@ -51,12 +42,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-        auth.userDetailsService(userDetailService);
+    protected void configure(AuthenticationManagerBuilder auth){
+        auth.authenticationProvider(authenticationProvider).eraseCredentials(false);
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web){
         web
             .ignoring()
             .antMatchers("/resources/**");

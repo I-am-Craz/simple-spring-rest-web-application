@@ -22,7 +22,6 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {"org.example.repositories"})
 public class JpaConfig {
-
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
@@ -39,8 +38,8 @@ public class JpaConfig {
     public DataSource dataSource(){
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setDriverClassName("org.postgresql.Driver");
-        hikariConfig.setUsername("postgres");
-        hikariConfig.setPassword("postgres");
+        hikariConfig.setUsername(System.getenv("DB_USERNAME"));
+        hikariConfig.setPassword(System.getenv("DB_PASSWORD"));
         hikariConfig.setMaximumPoolSize(100);
         hikariConfig.setJdbcUrl("jdbc:postgresql://localhost:5432/db");
         return new HikariDataSource(hikariConfig);

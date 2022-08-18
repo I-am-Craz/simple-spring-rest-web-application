@@ -20,7 +20,6 @@ import java.util.List;
 @ComponentScan("org.example")
 @EnableAspectJAutoProxy
 public class WebMvcConfig implements WebMvcConfigurer {
-
     @Autowired
     private ApplicationContext context;
 

@@ -6,18 +6,18 @@ import org.aspectj.lang.annotation.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
-
 @Component
 @Aspect
 @Slf4j
 public class LoggingAspect {
     @Around("Pointcuts.authenticate()")
     public Authentication aroundAuthenticateAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
-        Authentication authentication = null;
+        Authentication authentication;
         try{
             authentication = (Authentication) joinPoint.proceed();
-            log.info("User authenticated successfully.");
+            if(authentication == null){
+                log.warn("User login error. Wrong username or password. Access denied.");
+            }
         }
         catch (Throwable throwable){
             log.error("Authentication failed. " + throwable.getMessage());
@@ -42,24 +42,5 @@ public class LoggingAspect {
     @AfterThrowing(pointcut = "Pointcuts.getOrLoadBy()", throwing = "throwable")
     public void afterThrowingGetOrLoadByAdvice(Throwable throwable){
         log.error(throwable.getMessage());
-    }
-
-    @AfterThrowing(pointcut = "Pointcuts.saveUser()", throwing = "throwable")
-    public void afterThrowingSaveUserAdvice(Throwable throwable){
-        log.error(throwable.getMessage());
-    }
-
-    @Around("Pointcuts.dataSource()")
-    public DataSource aroundDataSourceAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
-        DataSource dataSource = null;
-        try{
-            dataSource = (DataSource) joinPoint.proceed();
-            log.info("DataSource is running successfully.");
-        }
-        catch (Throwable throwable){
-            log.error("DataSource working error. " + throwable.getMessage());
-            throw throwable;
-        }
-        return dataSource;
     }
 }

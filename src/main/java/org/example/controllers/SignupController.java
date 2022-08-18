@@ -1,6 +1,5 @@
 package org.example.controllers;
 
-import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exceptions.UserAlreadyExistsException;
 import org.example.services.UserService;
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-import java.util.Collections;
-
 @Controller
 @RequestMapping("/signup")
 public class SignupController{
@@ -30,7 +27,6 @@ public class SignupController{
     public String signup(@ModelAttribute("user") User user, HttpServletRequest request)
             throws ServletException, UserAlreadyExistsException {
         char[] password = user.getPassword().toCharArray();
-        user.setRoles(Collections.singleton(Role.USER));
         userService.saveUser(user);
         request.login(user.getUsername(), String.valueOf(password));
         Arrays.fill(password, '0');

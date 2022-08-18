@@ -54,10 +54,12 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User saveUser(User user) throws UserAlreadyExistsException {
-        if(getUserByUsername(user.getUsername()) != null){
-            throw new UserAlreadyExistsException("User with the username " +
-                      user.getUsername() + " already exists.");
-        }
+        try{
+            if(getUserByUsername(user.getUsername()) != null){
+                throw new UserAlreadyExistsException("User with the username " +
+                        user.getUsername() + " already exists.");
+            }
+        } catch (UserNotFoundException ignored){}
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
