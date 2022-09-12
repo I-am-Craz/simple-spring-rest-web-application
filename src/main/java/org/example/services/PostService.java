@@ -7,7 +7,6 @@ import java.util.List;
 public interface PostService {
     List<Post> getAllPost();
     Post getPostById(Long id) throws PostNotFoundException;
-    void updatePost(Post post);
-    void savePost(Post post);
+    Post savePost(Post post);
     void deletePostById(Long id);
 }

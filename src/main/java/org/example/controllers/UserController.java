@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import org.example.entities.User;
+import org.example.exceptions.UserAlreadyExistsException;
 import org.example.exceptions.UserNotFoundException;
 import org.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.Arrays;
 
 @Controller
 @RequestMapping("/users")
@@ -22,7 +24,7 @@ public class UserController {
         model.addAttribute("users", userService.getAllUsers());
         User user = userService.getUserByUsername(principal.getName());
         model.addAttribute("me", user);
-        return "users/users";
+        return "users/all";
     }
 
     @GetMapping("/{id}")
@@ -32,25 +34,29 @@ public class UserController {
         return "users/user";
     }
 
-    @GetMapping("/me")
-    public String getLoggedUser(Model model, Principal principal) throws UserNotFoundException{
-        User user = userService.getUserByUsername(principal.getName());
-        model.addAttribute("user", user);
-        return "users/me";
+    @PostMapping("/create")
+    public String createNewUser(@ModelAttribute("user") User user, HttpServletRequest request)
+        throws ServletException, UserAlreadyExistsException {
+        char[] password = user.getPassword().toCharArray();
+        userService.saveUser(user);
+        request.login(user.getUsername(), String.valueOf(password));
+        Arrays.fill(password, '0');
+        user.setPassword(String.valueOf(password));
+        return "redirect:/posts";
     }
 
-    @PatchMapping("/me/{myId}")
+    @PatchMapping("/{id}")
     public String updateLoggedUser(@ModelAttribute("user") User user,
-                                   @PathVariable("myId") Long id,
+                                   @PathVariable("id") Long id,
                                    HttpServletRequest request) throws ServletException {
         user.setId(id);
-        userService.updateUser(user);
+        userService.saveUser(user);
         request.logout();
         return  "redirect:/login";
     }
 
-    @DeleteMapping("/me/{myId}")
-    public String deleteLoggedUser(@PathVariable("myId") Long id){
+    @DeleteMapping("/{id}")
+    public String deleteLoggedUser(@PathVariable("id") Long id){
         userService.deleteUserById(id);
         return "redirect:/login";
     }

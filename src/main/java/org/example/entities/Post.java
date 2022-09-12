@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long id;
 
@@ -27,4 +27,14 @@ public class Post {
     @Column(name = "image_link")
     private String imageLink;
 
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", user=" + (user == null ? "No." : user.getId()) +
+                ", imageLink='" + imageLink + '\'' +
+                '}';
+    }
 }

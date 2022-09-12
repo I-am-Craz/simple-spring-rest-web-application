@@ -26,7 +26,7 @@ public class LoggingAspect {
         return authentication;
     }
 
-    @Around("Pointcuts.signup()")
+    @Around("Pointcuts.createNewUser()")
     public String aroundSignupAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
         String webPage = null;
         try{

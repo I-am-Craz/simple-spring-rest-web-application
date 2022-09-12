@@ -6,8 +6,8 @@ public class Pointcuts {
     @Pointcut("execution(* org.example.config.UserAuthenticationProvider.authenticate(..))")
     public void authenticate(){}
 
-    @Pointcut("execution(String org.example.controllers.SignupController.signup(..))")
-    public void signup(){}
+    @Pointcut("execution(String org.example.controllers.UserController.createNewUser(..))")
+    public void createNewUser(){}
 
     @Pointcut("execution(* org.example.services.implementations.*.*By*(..))")
     public void getOrLoadBy(){}

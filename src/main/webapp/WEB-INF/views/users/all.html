@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<th:block th:replace="fragments/head.html :: head"></th:block>
+<body>
+    <header class="centered-row header space-around"
+            th:insert="fragments/menu.html ::
+            menu(path1='/profile', text1='Profile',
+            path2='/posts/create',text2='Create a post',
+            path3='/posts', text3='View all posts',
+            path4='', text4='')">
+    </header>
+    <main>
+        <section class="centered">
+            <ul class="centered-column space-around">
+                <li th:each="user : ${users}">
+                    <a th:if="${me.getUsername().equals(user.getUsername())}" href="/profile">Me</a>
+                    <a th:unless="${me.getUsername().equals(user.getUsername())}"
+                       th:href="@{/users/{id}(id=${user.getId()})}"
+                       th:text="${user.getUsername()}">username</a>
+                </li>
+            </ul>
+        </section>
+    </main>
+    <th:block th:replace="fragments/script.html :: script"/>
+</body>
+</html>

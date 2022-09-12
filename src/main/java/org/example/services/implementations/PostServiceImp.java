@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 public class PostServiceImp implements PostService {
     @Autowired
@@ -33,13 +34,8 @@ public class PostServiceImp implements PostService {
     }
 
     @Override
-    public void updatePost(Post post) {
-        postRepository.update(post.getTitle(), post.getContent(), post.getImageLink(), post.getId());
-    }
-
-    @Override
-    public void savePost(Post post) {
-        postRepository.save(post);
+    public Post savePost(Post post) {
+        return postRepository.save(post);
     }
 
     @Override

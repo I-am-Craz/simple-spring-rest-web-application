@@ -1,68 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.com">
 <th:block th:replace="fragments/head :: head"/>
+<body>
+    <header class="header">
+        <th:block th:replace="fragments/menu.html ::
+            menu(path1='/profile', text1='Profile',
+            path2='/users', text2='View all users',
+            path3='/posts', text3='View all posts',
+            path4='', text4='')" class="mr-10"/>
 
-<body th:if="${post.getUser().getId() == user.getId()}">
-    <header class="centered-row header">
-        <menu class="centered-row w-100 menu">
-            <menuitem>
-                <a href="/users/me">Manage an account</a>
-            </menuitem>
-            <menuitem>
-                <a href="/profile">Profile</a>
-            </menuitem>
-            <menuitem>
-                <a th:href="@{/posts/{id}/update(id=${post.getId()})}">Edit</a>
-            </menuitem>
-            <menuitem>
-                <a href="/posts">View all posts</a>
-            </menuitem>
-            <menuitem>
-                <a href="/users">View all users</a>
-            </menuitem>
-            <menuitem>
-                <a href="/logout">Logout</a>
-            </menuitem>
+        <div th:if="${post.getUser().getId() == user.getId()}" class="centered-row w-50">
+            <a th:href="@{/posts/{id}/update(id=${post.getId()})}">Edit</a>
             <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
                 <button type="submit" class="no-bg no-border">Delete</button>
             </form>
-            </menuitem>
-        </menu>
-    </header>
-    <main class="post">
-        <section class="post-content centered-column">
-            <img th:src="${post.getImageLink()}" class="mb-3 w-75 post-content__image">
-            <h1 th:text="${post.getTitle()}" class="post-content__title">title</h1>
-            <p th:text="${post.getContent()}" class="post-content__content">content</p>
-        </section>
-    </main>
-</body>
-
-<body th:unless="${post.getUser().getId() == user.getId()}">
-    <header class="centered-row header">
-        <menu class="centered-row w-100 menu">
-            <menuitem>
-                <a href="/users/me">Manage an account</a>
-            </menuitem>
-            <menuitem>
-                <a href="/profile">Profile</a>
-            </menuitem>
-            <menuitem>
-                <a href="/posts/create">Create a post</a>
-            </menuitem>
-            <menuitem>
-                <a href="/posts">View all posts</a>
-            </menuitem>
-            <menuitem>
-                <a href="/users">View all users</a>
-            </menuitem>
-            <menuitem>
-                <a href="/logout">Logout</a>
-            </menuitem>
-        </menu>
+        </div>
     </header>
     <main  class="post">
-        <section class="centered-column post-content">
+        <section class="centered-column space-around post-content">
             <img th:src="${post.getImageLink()}" class="mb-3 post-content__image">
             <h1 th:text="${post.getTitle()}" class="post-content__title">title</h1>
             <p th:text="${post.getContent()}" class="post-content__content">content</p>
@@ -70,5 +25,4 @@
     </main>
     <th:block th:replace="fragments/script.html :: script"/>
 </body>
-
 </html>

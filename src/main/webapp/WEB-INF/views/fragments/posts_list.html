@@ -1,0 +1,14 @@
+<ul class="post-list" xmlns:th="https://www.thymeleaf.org/" th:if="${posts.size() > 0}">
+    <li class="post-list__item"  th:each="post : ${posts}">
+        <div class="post-list__item-image">
+            <img th:src="${post.getImageLink()}">
+        </div>
+        <div class="post-list__item-content p-3 centered-column">
+            <h3 th:text="${post.getTitle()}" class="post-list__item-content__title">title</h3>
+            <p th:text="${post.getContent().substring(0,350) + '...'}"
+               class="post-list__item-content__content">content</p>
+            <a class="btn rounded-pill w-100 text-center post-list__item-content__link"
+               th:href="@{/posts/{id}(id=${post.getId()})}">view</a>
+        </div>
+    </li>
+</ul>

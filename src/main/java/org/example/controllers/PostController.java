@@ -23,14 +23,14 @@ public class PostController {
     @GetMapping
     public String getAllPosts(Model model){
         model.addAttribute("posts",  postService.getAllPost());
-        return "posts/posts";
+        return "posts/all";
     }
 
     @GetMapping("/{id}")
     public String getPost(Principal principal, @PathVariable("id") Long id, Model model)
             throws UserNotFoundException, PostNotFoundException {
         Post post = postService.getPostById(id);
-        User user = userService.getUserByUsername(principal.getName());
+        User user = getUserByPrincipal(principal);
         model.addAttribute("post", post);
         model.addAttribute("user", user);
         return "posts/post";
@@ -44,22 +44,27 @@ public class PostController {
     @PostMapping
     public String createPost(@ModelAttribute("post") Post post, Principal principal)
             throws UserNotFoundException{
-        User user = userService.getUserByUsername(principal.getName());
+        User user = getUserByPrincipal(principal);
         post.setUser(user);
         postService.savePost(post);
         return "redirect:/posts";
     }
 
     @GetMapping("/{id}/update")
-    public String getEditPage(@PathVariable("id") Long id, Model model) throws PostNotFoundException{
+    public String getEditPage(@PathVariable("id") Long id, Model model)
+            throws PostNotFoundException{
         Post post = postService.getPostById(id);
         model.addAttribute("post", post);
         return "posts/update";
     }
 
     @PatchMapping("/{id}")
-    public String updatePost(@ModelAttribute("post") Post post){
-        postService.updatePost(post);
+    public String updatePost(@ModelAttribute("post") Post post,
+                             @PathVariable("id") Long id,
+                             Principal principal){
+        post.setId(id);
+        post.setUser(getUserByPrincipal(principal));
+        postService.savePost(post);
         return "redirect:/profile";
     }
 
@@ -67,5 +72,9 @@ public class PostController {
     public String deletePost(@PathVariable("id") Long id){
         postService.deletePostById(id);
         return "redirect:/posts";
+    }
+
+    private User getUserByPrincipal(Principal principal){
+        return userService.getUserByUsername(principal.getName());
     }
 }

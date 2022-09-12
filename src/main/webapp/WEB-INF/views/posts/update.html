@@ -2,45 +2,19 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.com">
 <th:block th:replace="fragments/head :: head"/>
 <body>
-    <header class="centered-row header">
-        <menu class="centered-row w-100 menu">
-            <menuitem>
-                <a href="/users/me">Manage an account</a>
-            </menuitem>
-            <menuitem>
-                <a href="/profile">Profile</a>
-            </menuitem>
-            <menuitem>
-                <a href="/posts/create">Create a post</a>
-            </menuitem>
-            <menuitem>
-                <a href="/posts">View all posts</a>
-            </menuitem>
-            <menuitem>
-                <a href="/users">View all users</a>
-            </menuitem>
-            <menuitem>
-                <a href="/logout">Logout</a>
-            </menuitem>
-            <menuitem>
-                <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
-                    <button type="submit" class="no-bg no-border">Delete</button>
-                </form>
-            </menuitem>
-        </menu>
+    <header class="header">
+        <th:block th:replace="fragments/menu.html ::
+            menu(path1='/profile', text1='Profile',
+            path2='/posts/create', text2='Create a post',
+            path3='/posts', text3='View all posts',
+            path4='/users', text4='View all users')"/>
+        <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
+            <button type="submit" class="no-bg no-border">Delete</button>
+        </form>
     </header>
     <main>
-        <section class="centered-column h-100">
-            <form  class="centered-column w-100" th:method="PATCH" th:action="@{/posts/{id}(id=${post.getId()})}" th:object="${post}">
-                <input type="text" class="w-100 post-content__title" th:field="*{title}" placeholder="Title" required="required" pattern="[A-Za-z0-9_\s,.?!-]{1,255}"
-                title="Only letters (either case), numbers, and and some special characters (A-Za-z0-9_\s,.?!-); the length must be between 1 and 255 characters.">
-                <textarea cols="30" rows="10" class="w-100 post-content__content" th:field="*{content}" placeholder="Content" required="required" title="The length must be between 100 and 5000."
-                maxlength="5000" minlength="100">content</textarea>
-                <input type="url" class="w-100 post-content__image" th:field="*{imageLink}" placeholder="Image URL" required="required" pattern="http(s?)(:\/\/).{1,255}"
-                title="The length must be between 1 and 255 characters.">
-                <button type="submit" class="btn w-100">Update</button>
-            </form>
-        </section>
+        <section class="centered-column space-around" th:insert="fragments/post_form.html ::
+        post_form(method='PATCH', path=${'/posts/' + post.getId()}, button_text='Update')"></section>
     </main>
     <th:block th:replace="fragments/script.html :: script"/>
 </body>

@@ -1,0 +1,18 @@
+<menu th:fragment="menu(path1, text1, path2, text2, path3, text3, path4, text4)"
+      class="centered-row w-100 menu" xmlns:th="https://www.thymeleaf.org/">
+    <menuitem>
+        <a th:href="@{${path1}}" th:text="${text1}">text</a>
+    </menuitem>
+    <menuitem>
+        <a th:href="@{${path2}}" th:text="${text2}">text</a>
+    </menuitem>
+    <menuitem>
+        <a th:href="@{${path3}}" th:text="${text3}">text</a>
+    </menuitem>
+    <menuitem th:style="${path4} == '' AND ${text4} == '' ? 'display:none;' : 'display:block;'">
+        <a th:href="@{${path4}}" th:text="${text4}">text</a>
+    </menuitem>
+    <menuitem>
+        <a href="/logout">Logout</a>
+    </menuitem>
+</menu>

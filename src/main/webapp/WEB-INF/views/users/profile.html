@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<th:block th:replace="fragments/head :: head"/>
+<body>
+    <header class="centered-row header"
+            th:insert="fragments/menu.html ::
+            menu(path1='/posts/create', text1='Create a post',
+            path2='/posts',text2='View all posts',
+            path3='/users', text3='View all users',
+            path4='', text4='')">
+    </header>
+    <main class="row g-0">
+        <section class="col-5">
+            <th:block th:insert="fragments/user_form.html :: user_form(method='PATCH',
+                 path=${'/users/' + user.getId()}, button_text='Update')"/>
+            <br>
+            <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}" class="mt-4">
+                <button type="submit" class="no-bg no-border">Delete an account</button>
+            </form>
+        </section>
+
+        <section th:with="posts=${user.getPosts()}" th:object="${user}" class="col-6">
+            <h2 th:if="${posts.size() > 0}" class="text-center">Your posts</h2>
+            <h2 th:unless="${posts.size() > 0}" class="text-center">You have yet to write any posts.</h2>
+            <div th:insert="fragments/posts_list :: ul" class="mt-2 scroll h-50"></div>
+        </section>
+    </main>
+    <th:block th:replace="fragments/script.html :: script"/>
+</body>
+</html>

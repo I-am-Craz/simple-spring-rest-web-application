@@ -11,7 +11,7 @@ import java.util.*;
 @NoArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
 
@@ -27,7 +27,7 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Post> posts;
 
-    public void setPosts(Set<Post> posts){
+    public void setPosts(List<Post> posts){
         if(this.posts == null){
             this.posts = new ArrayList<>();
         }
@@ -36,5 +36,4 @@ public class User {
             this.posts.add(post);
         }
     }
-
 }

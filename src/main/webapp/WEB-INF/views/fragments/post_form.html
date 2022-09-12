@@ -1,0 +1,15 @@
+<form  th:fragment="post_form(method, path, button_text)" class="centered-column w-100" th:method="${method}"
+       th:action="@{${path}}" th:object="${post}" xmlns:th="https://www.thymeleaf.org/">
+    <input class="w-100 post-content__title" type="text" th:field="*{title}" placeholder="Title"
+           required="required" pattern="[A-Za-z0-9_\s,.?!-]{1,255}"
+           title="Only letters (either case), numbers, and some special characters
+           (A-Za-z0-9_\s,.?!-); the length must be between 1 and 255 characters.">
+    <textarea class="w-100 post-content__content" cols="30" rows="10"
+              th:field="*{content}" placeholder="Content" required="required"
+              title="The length must be between 100 and 5000."
+              minlength="100" maxlength="5000">content</textarea>
+    <input class="w-100 post-content__image" type="url" th:field="*{imageLink}"
+           placeholder="Image URL" required="required" pattern="http(s?)(:\/\/).{1,255}"
+           title="The length must be between 1 and 255 characters.">
+    <button type="submit" class="btn w-100" th:text="${button_text}">text</button>
+</form>

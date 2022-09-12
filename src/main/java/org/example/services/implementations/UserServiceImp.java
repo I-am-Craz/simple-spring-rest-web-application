@@ -10,11 +10,11 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @EnableAspectJAutoProxy(proxyTargetClass=true)
 public class UserServiceImp implements UserService {
     @Autowired
@@ -38,18 +38,12 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) throws UserNotFoundException{
+    public User getUserByUsername(String username) throws UserNotFoundException {
         Optional<User> optionalUser = userRepository.findByUsername(username);
-        if(optionalUser.isEmpty()){
+        if (optionalUser.isEmpty()) {
             throw new UserNotFoundException("User with username " + username + " is not found.");
         }
         return optionalUser.get();
-    }
-
-    @Override
-    public void updateUser(User user) {
-        userRepository.update(user.getUsername(), passwordEncoder.encode(user.getPassword()),
-                user.getEmail(), user.getId());
     }
 
     @Override
