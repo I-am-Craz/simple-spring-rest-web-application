@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <th:block th:replace="fragments/head.html :: head"></th:block>
 <body>
-    <header class="centered-row header space-around"
+    <header class="flex header space-around"
             th:insert="fragments/menu.html ::
             menu(path1='/profile', text1='Profile',
             path2='/posts/create',text2='Create a post',
@@ -16,7 +16,7 @@
                 <h2 th:if="${user.getPosts().size() > 0}" th:text="'and there are' + ' ' + ${user.getUsername().trim()} + '\'s' + ' ' + 'posts here'">subtitle</h2>
                 <h2 th:unless="${user.getPosts().size() > 0}" th:text="${user.getUsername()} + ' has yet to write any post.'">subtitle</h2>
             </div>
-            <th:block th:replace="fragments/posts_list :: ul"/>
+            <th:block th:replace="fragments/posts_list :: ul(posts=${user.getPosts()})"/>
             <div>
                 <h3 th:text="'And this is' + ' ' + ${user.getUsername().trim()} + '\'s' + ' ' + 'email' + ' ' + ':' + ' ' + ${user.getEmail()}"></h3>
             </div>

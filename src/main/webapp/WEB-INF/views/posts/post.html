@@ -2,14 +2,14 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.com">
 <th:block th:replace="fragments/head :: head"/>
 <body>
-    <header class="header">
+    <header class="header flex items-baseline">
         <th:block th:replace="fragments/menu.html ::
             menu(path1='/profile', text1='Profile',
             path2='/users', text2='View all users',
             path3='/posts', text3='View all posts',
-            path4='', text4='')" class="mr-10"/>
+            path4='', text4='')"/>
 
-        <div th:if="${post.getUser().getId() == user.getId()}" class="centered-row w-50">
+        <div th:if="${post.getUser().getId() == user.getId()}" class="flex space-around w-50">
             <a th:href="@{/posts/{id}/update(id=${post.getId()})}">Edit</a>
             <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
                 <button type="submit" class="no-bg no-border">Delete</button>

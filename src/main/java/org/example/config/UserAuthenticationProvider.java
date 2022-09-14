@@ -34,7 +34,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         }
         finally {
             Arrays.fill(password, '0');
-            user.get().setPassword(String.valueOf(password));
+            user.ifPresent(u -> u.setPassword(String.valueOf(password)));
         }
     }
 

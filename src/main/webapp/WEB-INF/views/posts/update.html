@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.com">
 <th:block th:replace="fragments/head :: head"/>
 <body>
-    <header class="header">
+    <header class="header flex items-baseline">
         <th:block th:replace="fragments/menu.html ::
             menu(path1='/profile', text1='Profile',
             path2='/posts/create', text2='Create a post',
             path3='/posts', text3='View all posts',
             path4='/users', text4='View all users')"/>
-        <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
+        <form class="mr-5" th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
             <button type="submit" class="no-bg no-border">Delete</button>
         </form>
     </header>

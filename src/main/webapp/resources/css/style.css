@@ -2,10 +2,10 @@
   --primary-color: #0d6efd;
   --secondary-color: #ffffff;
 }
-.centered-row{
+.flex{
     display: flex;
-    justify-items: baseline;
-    flex-direction: row;
+}
+.items-baseline{
     align-items: baseline;
 }
 .centered-column{
@@ -73,4 +73,7 @@ ul{
 }
 .w-50{
     width: 50%;
+}
+.mr-5{
+    margin-right: 5%;
 }

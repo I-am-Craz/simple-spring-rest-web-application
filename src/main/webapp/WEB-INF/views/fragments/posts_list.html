@@ -1,4 +1,4 @@
-<ul class="post-list" xmlns:th="https://www.thymeleaf.org/" th:if="${posts.size() > 0}">
+<ul th:fragment="ul(posts)" class="post-list" xmlns:th="https://www.thymeleaf.org/" th:if="${posts.size() > 0}">
     <li class="post-list__item"  th:each="post : ${posts}">
         <div class="post-list__item-image">
             <img th:src="${post.getImageLink()}">
