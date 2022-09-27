@@ -2,8 +2,8 @@ package org.example.controllers;
 
 import org.example.entities.Post;
 import org.example.entities.User;
-import org.example.exceptions.PostNotFoundException;
-import org.example.exceptions.UserNotFoundException;
+import org.example.exception_handling.exceptions.PostNotFoundException;
+import org.example.exception_handling.exceptions.UserNotFoundException;
 import org.example.services.PostService;
 import org.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

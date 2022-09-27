@@ -1,7 +1,7 @@
 package org.example.services.implementations;
 
-import org.example.exceptions.UserAlreadyExistsException;
-import org.example.exceptions.UserNotFoundException;
+import org.example.exception_handling.exceptions.UserAlreadyExistsException;
+import org.example.exception_handling.exceptions.UserNotFoundException;
 import org.example.entities.User;
 import org.example.repositories.UserRepository;
 import org.example.services.UserService;

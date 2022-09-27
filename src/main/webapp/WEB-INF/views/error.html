@@ -4,8 +4,9 @@
 <body>
     <main>
         <section class="centered-column space-around">
-            <h1>Error</h1>
-            <h2 th:text="${message}">message</h2>
+            <h1 th:text="${error_code}">code</h1>
+            <h2 th:text="${error_status}">status</h2>
+            <h3 th:text="${error_message}">message</h3>
         </section>
     </main>
     <th:block th:replace="fragments/script.html :: script"/>

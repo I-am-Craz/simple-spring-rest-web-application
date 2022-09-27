@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -21,7 +23,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) {
-        String username = authentication.getName();;
+        String username = authentication.getName();
         char[] password = authentication.getCredentials().toString().toCharArray();
 
         Optional<User> user = userRepository.findByUsername(username);

@@ -1,6 +1,6 @@
 package org.example.services;
 
-import org.example.exceptions.UserNotFoundException;
+import org.example.exception_handling.exceptions.UserNotFoundException;
 import org.example.entities.User;
 import java.util.List;
 

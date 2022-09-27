@@ -1,8 +1,8 @@
 package org.example.controllers;
 
 import org.example.entities.User;
-import org.example.exceptions.UserAlreadyExistsException;
-import org.example.exceptions.UserNotFoundException;
+import org.example.exception_handling.exceptions.UserAlreadyExistsException;
+import org.example.exception_handling.exceptions.UserNotFoundException;
 import org.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

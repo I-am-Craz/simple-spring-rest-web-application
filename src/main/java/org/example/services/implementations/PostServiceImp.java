@@ -1,6 +1,6 @@
 package org.example.services.implementations;
 
-import org.example.exceptions.PostNotFoundException;
+import org.example.exception_handling.exceptions.PostNotFoundException;
 import org.example.entities.Post;
 import org.example.repositories.PostRepository;
 import org.example.services.PostService;

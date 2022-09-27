@@ -1,6 +1,6 @@
 package org.example.services;
 
-import org.example.exceptions.PostNotFoundException;
+import org.example.exception_handling.exceptions.PostNotFoundException;
 import org.example.entities.Post;
 import java.util.List;
 
