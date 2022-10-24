@@ -9,4 +9,6 @@ public interface PostService {
     Post getPostById(Long id) throws PostNotFoundException;
     Post savePost(Post post);
     void deletePostById(Long id);
+
+    void blockPostById(Long id);
 }

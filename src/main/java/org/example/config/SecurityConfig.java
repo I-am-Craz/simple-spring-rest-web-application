@@ -1,30 +1,50 @@
 package org.example.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.entities.Role;
+import org.example.services.implementations.UserDetailsServiceImp;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private UserAuthenticationProvider authenticationProvider;
+public class SecurityConfig{
+    @Bean
+    public UserDetailsService userDetailsService(){
+        return new UserDetailsServiceImp();
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception{
+
+    @Bean
+    public AuthenticationProvider daoAuthenticationProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userDetailsService());
+        provider.setHideUserNotFoundExceptions(false);
+        return provider;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeRequests()
                     .antMatchers("/", "/signup", "/users/create").permitAll()
+                    .regexMatchers("/users/(\\\\d+)/block", "/posts/(\\\\d+)/block")
+                    .hasAnyRole(Role.ROLE_MODER.getAuthority(), Role.ROLE_ADMIN.getAuthority())
+                    .regexMatchers("/posts/create", "/posts/(\\\\d+)/update")
+                    .hasRole(Role.ROLE_USER.getAuthority())
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
@@ -38,19 +58,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/")
                     .invalidateHttpSession(true)
                     .clearAuthentication(true)
-                    .deleteCookies();
+                    .deleteCookies()
+                    .and()
+                .authenticationProvider(daoAuthenticationProvider());
+        return httpSecurity.build();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth){
-        auth.authenticationProvider(authenticationProvider).eraseCredentials(false);
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().antMatchers("/resources/**");
     }
-
-    @Override
-    public void configure(WebSecurity web){
-        web
-            .ignoring()
-            .antMatchers("/resources/**");
-    }
-
 }

@@ -1,6 +1,7 @@
 package org.example.entities;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.util.*;
 
@@ -23,6 +24,13 @@ public class User {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "roles", columnDefinition = "roles[]")
+    @Type(type = "org.example.custom_hibernate_data_types.RolesArrayType")
+    private String[] roles;
+
+    @Column(name = "enabled")
+    private boolean isEnabled;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Post> posts;

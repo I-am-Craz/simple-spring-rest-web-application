@@ -2,20 +2,51 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.com">
 <th:block th:replace="fragments/head :: head"/>
 <body>
-    <header class="header flex items-baseline">
-        <th:block th:replace="fragments/menu.html ::
-            menu(path1='/profile', text1='Profile',
-            path2='/users', text2='View all users',
-            path3='/posts', text3='View all posts',
-            path4='', text4='')"/>
 
-        <div th:if="${post.getUser().getId() == user.getId()}" class="flex space-around w-50">
-            <a th:href="@{/posts/{id}/update(id=${post.getId()})}">Edit</a>
-            <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
-                <button type="submit" class="no-bg no-border">Delete</button>
-            </form>
-        </div>
+    <header class="header">
+        <nav class="menu">
+            <ul  th:if="${#httpServletRequest.isUserInRole('ROLE_USER')}" class="flex space-around">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/profile', text='Profile')"/>
+                <th:block th:unless="${post.getUser().getId() == user.getId()}"
+                          th:replace="fragments/menuitem.html :: menuitem(path='/posts/create', text='Create a post')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/users', text='View all users')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts', text='View all posts')"/>
+                <li th:if="${post.getUser().getId() == user.getId()}">
+                    <a th:href="@{/posts/{id}/update(id=${post.getId()})}">Edit</a>
+                </li>
+                <li  th:if="${post.getUser().getId() == user.getId()}">
+                    <form th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
+                        <button type="submit" class="no-bg no-border">Delete</button>
+                    </form>
+                </li>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/logout', text='Logout')"/>
+            </ul>
+
+            <ul  th:unless="${#httpServletRequest.isUserInRole('ROLE_USER')}" class="flex space-around">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/profile', text='Profile')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/users', text='View all users')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts', text='View all posts')"/>
+                <li>
+                    <form th:if="${post.isEnabled()}" class="mr-5" th:method="PATCH"
+                          th:action="@{/posts/{id}/block(id=${post.getId()})}">
+                        <button type="submit" class="no-bg no-border">Block</button>
+                    </form>
+
+                    <form th:unless="${post.isEnabled()}" class="mr-5" th:method="PATCH"
+                          th:action="@{/posts/{id}/block(id=${post.getId()})}">
+                        <button type="submit" class="no-bg no-border">Unblock</button>
+                    </form>
+                </li>
+                <li>
+                    <form class="mr-5" th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
+                        <button type="submit" class="no-bg no-border">Delete</button>
+                    </form>
+                </li>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/logout', text='Logout')"/>
+            </ul>
+        </nav>
     </header>
+
     <main  class="post">
         <section class="centered-column space-around post-content">
             <img th:src="${post.getImageLink()}" class="mb-3 post-content__image">
@@ -23,6 +54,7 @@
             <p th:text="${post.getContent()}" class="post-content__content">content</p>
         </section>
     </main>
+
     <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

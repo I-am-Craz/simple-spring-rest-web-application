@@ -1,26 +1,99 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<th:block th:replace="fragments/head.html :: head"></th:block>
+<th:block th:replace="fragments/head.html :: head"/>
 <body>
-    <header class="flex header"
-            th:insert="fragments/menu.html ::
-            menu(path1='/profile', text1='Profile',
-            path2='/posts/create',text2='Create a post',
-            path3='/posts', text3='View all posts',
-            path4='', text4='')">
+
+    <header class="flex header">
+        <nav class="menu w-100">
+            <ul  th:if="${#httpServletRequest.isUserInRole('ROLE_USER')}" class="flex space-around">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/profile', text='Profile')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts/create', text='Create a post')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts', text='View all posts')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/logout', text='Logout')"/>
+            </ul>
+
+            <ul  th:unless="${#httpServletRequest.isUserInRole('ROLE_USER')}" class="flex space-around">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/profile', text='Profile')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts', text='View all posts')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/logout', text='Logout')"/>
+            </ul>
+        </nav>
     </header>
+
     <main>
         <section class="centered">
-            <ul class="centered-column space-around">
-                <li th:each="user : ${users}">
-                    <a th:if="${me.getUsername().equals(user.getUsername())}" href="/profile">Me</a>
-                    <a th:unless="${me.getUsername().equals(user.getUsername())}"
-                       th:href="@{/users/{id}(id=${user.getId()})}"
-                       th:text="${user.getUsername()}">username</a>
-                </li>
-            </ul>
+
+            <table class="w-20 users-list">
+                <tr th:each="user : ${users}" th:if="${user.isEnabled()} AND ${#httpServletRequest.isUserInRole('ROLE_USER')}">
+                    <td>
+                        <a th:if="${me.getUsername().equals(user.getUsername())}" href="/profile">Me</a>
+                        <a th:unless="${me.getUsername().equals(user.getUsername())}"
+                        th:href="@{/users/{id}(id=${user.getId()})}"
+                        th:text="${user.getUsername()}">Username</a>
+                    </td>
+                </tr>
+
+                <tr th:if="(${user.isEnabled()} OR ${!user.isEnabled()}) AND ${!#httpServletRequest.isUserInRole('ROLE_USER')}"
+                    th:each="user : ${users}" th:classappend="${user.isEnabled()} ? enabled : blocked"
+                    th:with="admin_role=${T(org.example.entities.Role).ROLE_ADMIN},
+                    moder_role=${T(org.example.entities.Role).ROLE_MODER}">
+
+                    <td>
+                        <a th:if="${me.getUsername().equals(user.getUsername())}" href="/profile">Me</a>
+
+                        <a th:unless="${me.getUsername().equals(user.getUsername())}"
+                           th:href="@{/users/{id}(id=${user.getId()})}"
+                           th:text="${user.getUsername()}">Username</a>
+                    </td>
+
+                    <td th:if="${#httpServletRequest.isUserInRole('ROLE_MODER')}">
+                        <form  th:if="${!user.isEnabled()} AND
+                                      ${!me.getUsername().equals(user.getUsername())}"
+                               th:method="PATCH" th:action="@{/users/{id}/block(id=${user.getId()})}">
+                            <button type="submit" class="no-bg no-border">Unblock</button>
+                        </form>
+
+
+                        <form  th:if="${user.isEnabled()} AND
+                                      ${!me.getUsername().equals(user.getUsername())} AND
+                                      ${!#lists.contains(user.getRoles(), admin_role.name())} AND
+                                      ${!#lists.contains(user.getRoles(), moder_role.name())}"
+                               th:method="PATCH" th:action="@{/users/{id}/block(id=${user.getId()})}">
+                            <button type="submit" class="no-bg no-border">Block</button>
+                        </form>
+                    </td>
+
+                    <td th:if="${#httpServletRequest.isUserInRole('ROLE_ADMIN')}">
+                        <form  th:if="${!user.isEnabled()} AND
+                                      ${!me.getUsername().equals(user.getUsername())} AND
+                                      ${!#lists.contains(user.getRoles(), admin_role.name())}"
+                               th:method="PATCH" th:action="@{/users/{id}/block(id=${user.getId()})}">
+                            <button type="submit" class="no-bg no-border">Unblock</button>
+                        </form>
+
+                        <form  th:if="${user.isEnabled()} AND
+                                      ${!me.getUsername().equals(user.getUsername())} AND
+                                      ${!#lists.contains(user.getRoles(), admin_role.name())}"
+                               th:method="PATCH" th:action="@{/users/{id}/block(id=${user.getId()})}">
+                            <button type="submit" class="no-bg no-border">Block</button>
+                        </form>
+                    </td>
+
+                    <td  th:if="${#httpServletRequest.isUserInRole('ROLE_ADMIN')}">
+                        <form  th:if="${!#lists.contains(user.getRoles(), admin_role.name())} AND
+                                      ${!me.getUsername().equals(user.getUsername())}"
+                               th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">
+                            <button type="submit" class="no-bg no-border">Delete</button>
+                        </form>
+                    </td>
+
+                </tr>
+            </table>
+
+
         </section>
     </main>
+
     <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

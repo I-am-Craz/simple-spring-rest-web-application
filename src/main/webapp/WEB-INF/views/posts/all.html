@@ -2,19 +2,31 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <th:block th:replace="fragments/head.html :: head"/>
 <body>
-    <header class="header flex space-around"
-            th:insert="fragments/menu.html ::
-            menu(path1='/profile', text1='Profile',
-            path2='/posts/create', text2='Create a post',
-            path3='/users', text3='View all users',
-            path4='', text4='')">
+
+    <header class="header">
+        <nav  class="menu">
+            <ul  th:if="${#httpServletRequest.isUserInRole('ROLE_USER')}" class="flex space-around">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/profile', text='Profile')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts/create', text='Create a post')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/users', text='View all users')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/logout', text='Logout')"/>
+            </ul>
+
+            <ul  th:unless="${#httpServletRequest.isUserInRole('ROLE_USER')}" class="flex space-around w-100">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/profile', text='Profile')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/users', text='View all users')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/logout', text='Logout')"/>
+            </ul>
+        </nav>
     </header>
+
     <main>
         <section>
             <th:block th:replace="fragments/posts_list :: ul(posts=${posts})"/>
             <h2 th:unless="${posts.size() > 0}" class="text-center">No posts.</h2>
         </section>
     </main>
+
     <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

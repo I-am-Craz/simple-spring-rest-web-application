@@ -7,10 +7,10 @@ import org.example.exception_handling.exceptions.UserNotFoundException;
 import org.example.services.PostService;
 import org.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.security.Principal;
 
 @Controller
 @RequestMapping("/posts")
@@ -27,10 +27,10 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String getPost(Principal principal, @PathVariable("id") Long id, Model model)
+    public String getPost(@AuthenticationPrincipal(expression = "user") User user,
+                          @PathVariable("id") Long id, Model model)
             throws UserNotFoundException, PostNotFoundException {
         Post post = postService.getPostById(id);
-        User user = getUserByPrincipal(principal);
         model.addAttribute("post", post);
         model.addAttribute("user", user);
         return "posts/post";
@@ -42,10 +42,11 @@ public class PostController {
     }
 
     @PostMapping
-    public String createPost(@ModelAttribute("post") Post post, Principal principal)
+    public String createPost(@ModelAttribute("post") Post post,
+                             @AuthenticationPrincipal(expression = "user") User user)
             throws UserNotFoundException{
-        User user = getUserByPrincipal(principal);
         post.setUser(user);
+        post.setEnabled(true);
         postService.savePost(post);
         return "redirect:/posts";
     }
@@ -61,9 +62,9 @@ public class PostController {
     @PatchMapping("/{id}")
     public String updatePost(@ModelAttribute("post") Post post,
                              @PathVariable("id") Long id,
-                             Principal principal){
+                             @AuthenticationPrincipal(expression = "user") User user){
         post.setId(id);
-        post.setUser(getUserByPrincipal(principal));
+        post.setUser(user);
         postService.savePost(post);
         return "redirect:/profile";
     }
@@ -74,7 +75,9 @@ public class PostController {
         return "redirect:/posts";
     }
 
-    private User getUserByPrincipal(Principal principal){
-        return userService.getUserByUsername(principal.getName());
+    @PatchMapping("/{id}/block")
+    public String blockPost(@PathVariable("id") Long id){
+        postService.blockPostById(id);
+        return "redirect:/posts";
     }
 }

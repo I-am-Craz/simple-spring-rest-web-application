@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
-import java.nio.file.AccessDeniedException;
 
 @Controller
 @ControllerAdvice
@@ -24,15 +23,9 @@ public class GlobalExceptionController {
     }
 
     @ExceptionHandler({UserAlreadyExistsException.class})
-    public ModelAndView AlreadyExistsHandler(Exception e){
+    public ModelAndView alreadyExistsHandler(Exception e){
         return createModelAndView( HttpStatus.CONTINUE.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(), e.getMessage());
-    }
-
-    @ExceptionHandler({AccessDeniedException.class})
-    public ModelAndView AccessDeniedHandler(Exception e){
-        return createModelAndView(HttpStatus.FORBIDDEN.value(),
-                HttpStatus.FORBIDDEN.name(), e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,14 +1,66 @@
 <ul th:fragment="ul(posts)" class="post-list" xmlns:th="https://www.thymeleaf.org/" th:if="${posts.size() > 0}">
-    <li class="post-list__item"  th:each="post : ${posts}">
+
+    <li th:each="post : ${posts}" th:if="${post.isEnabled()} AND ${#httpServletRequest.isUserInRole('ROLE_USER')}"
+        class="post-list__item">
+
         <div class="post-list__item-image">
             <img th:src="${post.getImageLink()}">
         </div>
+
         <div class="post-list__item-content p-3 centered-column">
             <h3 th:text="${post.getTitle()}" class="post-list__item-content__title">title</h3>
-            <p th:text="${post.getContent().substring(0,350) + '...'}"
+            <p th:text="${post.getContent().length() < 350 ? post.getContent() : post.getContent().substring(0, 350) + '...'}"
                class="post-list__item-content__content">content</p>
+
             <a class="btn rounded-pill w-100 text-center post-list__item-content__link"
-               th:href="@{/posts/{id}(id=${post.getId()})}">view</a>
+               th:href="@{/posts/{id}(id=${post.getId()})}">View</a>
         </div>
     </li>
+
+    <li th:each="post : ${posts}" th:classappend="${post.isEnabled()} ? enabled : blocked"
+
+        th:if="(${post.isEnabled()} OR ${!post.isEnabled()}) AND
+        (${#httpServletRequest.isUserInRole('ROLE_ADMIN')} OR
+        ${#httpServletRequest.isUserInRole('ROLE_MODER')})"
+        class="post-list__item">
+
+        <div class="post-list__item-image">
+            <img th:src="${post.getImageLink()}">
+        </div>
+
+        <div class="post-list__item-content p-3 centered-column space-around">
+            <h3 th:text="${post.getTitle()}" class="post-list__item-content__title">title</h3>
+            <p th:text="${post.getContent().length() < 350 ? post.getContent() : post.getContent().substring(0, 350) + '...'}"
+               class="post-list__item-content__content">content</p>
+
+            <div class="flex space-between w-50">
+                <a class="btn w-25 rounded-pill mt-4 text-center post-list__item-content__link"
+                   th:href="@{/posts/{id}(id=${post.getId()})}">View</a>
+
+                <form th:if="(${#httpServletRequest.isUserInRole('ROLE_ADMIN')} OR
+                  ${#httpServletRequest.isUserInRole('ROLE_MODER')}) AND ${post.isEnabled()} "
+                      th:method="PATCH" th:action="@{/posts/{id}/block(id=${post.getId()})}"
+                      class="mt-4 w-25">
+                    <button type="submit" class="btn rounded-pill w-100 text-center
+                 post-list__item-content__link no-border bg-warning">Block</button>
+                </form>
+
+                <form th:if="(${#httpServletRequest.isUserInRole('ROLE_ADMIN')} OR
+                  ${#httpServletRequest.isUserInRole('ROLE_MODER')}) AND ${!post.isEnabled()} "
+                      th:method="PATCH" th:action="@{/posts/{id}/block(id=${post.getId()})}"
+                      class="mt-4 w-25">
+                    <button type="submit" class="btn rounded-pill w-100 text-center
+                 post-list__item-content__link no-border bg-warning">Unblock</button>
+                </form>
+
+                <form th:if="${#httpServletRequest.isUserInRole('ROLE_ADMIN')}"
+                      th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}"
+                      class="mt-4 w-25">
+                    <button type="submit" class="btn rounded-pill w-100 text-center
+                 post-list__item-content__link bg-danger no-border">Delete</button>
+                </form>
+            </div>
+        </div>
+    </li>
+
 </ul>

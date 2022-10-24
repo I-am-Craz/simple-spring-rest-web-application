@@ -10,4 +10,6 @@ public interface UserService {
     User getUserByUsername(String username) throws UserNotFoundException;
     User saveUser(User user);
     void deleteUserById(Long id);
+
+    void blockUserById(Long id);
 }

@@ -2,20 +2,29 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.com">
 <th:block th:replace="fragments/head :: head"/>
 <body>
+
     <header class="header flex items-baseline">
-        <th:block th:replace="fragments/menu.html ::
-            menu(path1='/profile', text1='Profile',
-            path2='/posts/create', text2='Create a post',
-            path3='/posts', text3='View all posts',
-            path4='/users', text4='View all users')"/>
-        <form class="mr-5" th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
-            <button type="submit" class="no-bg no-border">Delete</button>
-        </form>
+        <nav class="menu w-100">
+            <ul  class="flex space-around">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/profile', text='Profile')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts/create', text='Create a post')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts', text='View all posts')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/users', text='View all users')"/>
+                <li>
+                    <form class="mr-5" th:method="DELETE" th:action="@{/posts/{id}(id=${post.getId()})}">
+                        <button type="submit" class="no-bg no-border">Delete</button>
+                    </form>
+                </li>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/logout', text='Logout')"/>
+            </ul>
+        </nav>
     </header>
+
     <main>
         <section class="centered-column space-around" th:insert="fragments/post_form.html ::
         post_form(method='PATCH', path=${'/posts/' + post.getId()}, button_text='Update')"></section>
     </main>
+
     <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

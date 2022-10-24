@@ -2,20 +2,21 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <th:block th:replace="fragments/head.html :: head"/>
 <body>
+
     <header class="header flex space-around">
-        <menu class="flex w-25 menu space-around">
-            <menuitem>
-                <a href="/">Home</a>
-            </menuitem>
-            <menuitem>
-                <a href="/login">Login</a>
-            </menuitem>
-        </menu>
+        <nav class="menu">
+            <ul class="flex w-50 menu space-around">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/', text='Home')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/login', text='Login')"/>
+            </ul>
+        </nav>
     </header>
+
     <main>
         <section class="centered-column space-around" th:insert="fragments/user_form.html ::
         user_form(method='POST', path='/users/create', button_text='Signup')"></section>
     </main>
+
     <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

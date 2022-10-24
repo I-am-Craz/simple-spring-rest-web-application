@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <th:block th:replace="fragments/head.html :: head"/>
 <body>
+
     <main>
         <section class="centered-column space-around">
             <h1 th:text="${error_code}">code</h1>
@@ -9,6 +10,7 @@
             <h3 th:text="${error_message}">message</h3>
         </section>
     </main>
+
     <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

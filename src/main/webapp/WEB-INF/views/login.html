@@ -2,16 +2,16 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <th:block th:replace="fragments/head.html :: head"/>
 <body>
+
     <header class="flex header space-around">
-        <menu class="flex w-25 menu space-around">
-            <menuitem>
-                <a href="/">Home</a>
-            </menuitem>
-            <menuitem>
-                <a href="/signup">Signup</a>
-            </menuitem>
-        </menu>
+        <nav class="menu w-25">
+            <ul class="flex space-around">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/', text='Home')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/signup', text='Signup')"/>
+            </ul>
+        </nav>
     </header>
+
     <main>
         <section class="centered-column space-around">
             <form th:method="POST" th:action="@{/login}" th:object="${user}">
@@ -30,6 +30,7 @@
             </form>
         </section>
     </main>
+
     <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

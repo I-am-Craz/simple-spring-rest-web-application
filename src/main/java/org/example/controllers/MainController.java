@@ -1,10 +1,10 @@
 package org.example.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.entities.User;
 import org.example.exception_handling.exceptions.UserNotFoundException;
-import org.example.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -13,13 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.Principal;
 
 @Controller
+@Slf4j
 public class MainController {
-    @Autowired
-    private UserService userService;
-
     @GetMapping("/")
     public String homePage(){
         return "index";
@@ -40,8 +37,9 @@ public class MainController {
     }
 
     @GetMapping("/profile")
-    public String getProfilePage(Model model, Principal principal) throws UserNotFoundException {
-        User user = userService.getUserByUsername(principal.getName());
+    public String getProfilePage(Model model,
+                                 @AuthenticationPrincipal(expression = "user") User user)
+            throws UserNotFoundException {
         model.addAttribute("user", user);
         return "users/profile";
     }

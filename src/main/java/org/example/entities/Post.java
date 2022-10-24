@@ -26,4 +26,7 @@ public class Post {
 
     @Column(name = "image_link")
     private String imageLink;
+
+    @Column(name = "enabled")
+    private boolean isEnabled;
 }

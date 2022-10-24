@@ -1,16 +1,17 @@
 package org.example.controllers;
 
+import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.exception_handling.exceptions.UserAlreadyExistsException;
 import org.example.exception_handling.exceptions.UserNotFoundException;
 import org.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.Arrays;
 
 @Controller
@@ -20,9 +21,9 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public String getUsers(Model model, Principal principal) throws UserNotFoundException{
+    public String getUsers(Model model, @AuthenticationPrincipal(expression = "user") User user)
+            throws UserNotFoundException{
         model.addAttribute("users", userService.getAllUsers());
-        User user = userService.getUserByUsername(principal.getName());
         model.addAttribute("me", user);
         return "users/all";
     }
@@ -37,9 +38,15 @@ public class UserController {
     @PostMapping("/create")
     public String createNewUser(@ModelAttribute("user") User user, HttpServletRequest request)
         throws ServletException, UserAlreadyExistsException {
+
         char[] password = user.getPassword().toCharArray();
+
+        user.setRoles(new String[]{Role.ROLE_USER.name()});
+        user.setEnabled(true);
+
         userService.saveUser(user);
         request.login(user.getUsername(), String.valueOf(password));
+
         Arrays.fill(password, '0');
         user.setPassword(String.valueOf(password));
         return "redirect:/posts";
@@ -61,4 +68,9 @@ public class UserController {
         return "redirect:/login";
     }
 
+    @PatchMapping("/{id}/block")
+    public String blockUser(@PathVariable("id") Long id){
+        userService.blockUserById(id);
+        return "redirect:/users";
+    }
 }

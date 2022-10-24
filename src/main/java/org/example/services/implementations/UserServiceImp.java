@@ -1,5 +1,6 @@
 package org.example.services.implementations;
 
+import org.example.entities.Post;
 import org.example.exception_handling.exceptions.UserAlreadyExistsException;
 import org.example.exception_handling.exceptions.UserNotFoundException;
 import org.example.entities.User;
@@ -32,7 +33,7 @@ public class UserServiceImp implements UserService {
     public User getUserById(Long id) throws UserNotFoundException {
         Optional<User> optional = userRepository.findById(id);
         if(optional.isEmpty()){
-            throw new UserNotFoundException("User with id " + id + " is not found.");
+            throw new UserNotFoundException("User with the ID " + id + " is not found.");
         }
         return optional.get();
     }
@@ -41,7 +42,7 @@ public class UserServiceImp implements UserService {
     public User getUserByUsername(String username) throws UserNotFoundException {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (optionalUser.isEmpty()) {
-            throw new UserNotFoundException("User with username " + username + " is not found.");
+            throw new UserNotFoundException("User with the username " + username + " is not found.");
         }
         return optionalUser.get();
     }
@@ -61,5 +62,25 @@ public class UserServiceImp implements UserService {
     @Override
     public void deleteUserById(Long id){
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void blockUserById(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
+            throw new UserNotFoundException("User with the ID " + id + " is not found.");
+        }
+        User user = optionalUser.get();
+        if(user.isEnabled()){
+            user.setEnabled(false);
+            for(Post post  : user.getPosts()){
+                post.setEnabled(false);
+            }
+        } else{
+            user.setEnabled(true);
+            for(Post post  : user.getPosts()){
+                post.setEnabled(true);
+            }
+        }
     }
 }

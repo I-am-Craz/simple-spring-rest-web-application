@@ -1,16 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<th:block th:replace="fragments/head :: head"/>
+<th:block th:replace="fragments/head.html :: head"/>
 <body>
-    <header class="flex header"
-            th:insert="fragments/menu.html ::
-            menu(path1='/posts/create', text1='Create a post',
-            path2='/posts',text2='View all posts',
-            path3='/users', text3='View all users',
-            path4='', text4='')">
+
+    <header class="header">
+        <nav class="menu">
+            <ul  th:if="${#httpServletRequest.isUserInRole('ROLE_USER')}" class="flex space-around">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts/create', text='Create a post')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts', text='View all posts')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/users', text='View all users')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/logout', text='Logout')"/>
+            </ul>
+
+            <ul  th:unless="${#httpServletRequest.isUserInRole('ROLE_USER')}" class="flex space-around">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts', text='View all posts')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/users', text='View all users')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/logout', text='Logout')"/>
+            </ul>
+        </nav>
     </header>
+
     <main class="row g-0">
-        <section class="col-5 centered-column">
+        <section  class="centered-column"  th:classappend="${#httpServletRequest.isUserInRole('ROLE_USER')} ? col-5 : col-12">
+            <label for="roles">Roles:</label>
+            <ul id="roles">
+                <li th:each="role : ${user.getRoles()}" th:text="${role}"></li>
+            </ul>
             <th:block th:insert="fragments/user_form.html :: user_form(method='PATCH',
                  path=${'/users/' + user.getId()}, button_text='Update')"/>
             <br>
@@ -19,12 +34,14 @@
             </form>
         </section>
 
-        <section th:with="posts=${user.getPosts()}" th:object="${user}" class="col-6">
+        <section th:if="${#httpServletRequest.isUserInRole('ROLE_USER')}"
+                 th:with="posts=${user.getPosts()}" th:object="${user}" class="col-6">
             <h2 th:if="${posts.size() > 0}" class="text-center">Your posts</h2>
             <h2 th:unless="${posts.size() > 0}" class="text-center">You have yet to write any posts.</h2>
-            <div th:insert="fragments/posts_list :: ul(posts=${posts})" class="mt-2 scroll h-50"></div>
+            <div th:insert="fragments/posts_list :: ul(posts=${posts})" class="mt-2 scroll h-60"></div>
         </section>
     </main>
+
     <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

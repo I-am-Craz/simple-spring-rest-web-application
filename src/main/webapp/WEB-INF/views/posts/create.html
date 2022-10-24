@@ -2,17 +2,23 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.com">
 <th:block th:replace="fragments/head.html :: head"/>
 <body>
-    <header class="header"
-            th:insert="fragments/menu.html ::
-            menu(path1='/profile', text1='Profile',
-            path2='/posts',text2='View all posts',
-            path3='/users', text3='View all users',
-            path4='', text4='')">
+
+    <header class="header">
+        <nav class="menu">
+            <ul class="flex space-around">
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/profile', text='Profile')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/posts', text='View all posts')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/users', text='View all users')"/>
+                <th:block th:replace="fragments/menuitem.html :: menuitem(path='/logout', text='Logout')"/>
+            </ul>
+        </nav>
     </header>
+
     <main class="post">
         <section class="centered-column space-around" th:insert="fragments/post_form.html ::
         post_form(method='POST', path='/posts', button_text='Create')"></section>
     </main>
+
     <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>
