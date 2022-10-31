@@ -4,8 +4,8 @@
 <body>
 
     <header class="header flex space-around">
-        <nav class="menu">
-            <ul class="flex w-50 menu space-around">
+        <nav class="menu w-20">
+            <ul class="flex menu w-100 space-around">
                 <th:block th:replace="fragments/menuitem.html :: menuitem(path='/', text='Home')"/>
                 <th:block th:replace="fragments/menuitem.html :: menuitem(path='/login', text='Login')"/>
             </ul>

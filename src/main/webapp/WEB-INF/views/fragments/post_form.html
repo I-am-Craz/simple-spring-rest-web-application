@@ -8,8 +8,8 @@
 
     <textarea class="w-100 post-content__content" cols="30" rows="10"
               th:field="*{content}" placeholder="Content" required="required"
-              title="The length must be between 100 and 5000."
-              minlength="100" maxlength="5000">content</textarea>
+              title="The length must be between 350 and 5000."
+              minlength="350" maxlength="5000">content</textarea>
 
     <input class="w-100 post-content__image" type="url" th:field="*{imageLink}"
            placeholder="Image URL" required="required" pattern="http(s?)(:\/\/).{1,255}"

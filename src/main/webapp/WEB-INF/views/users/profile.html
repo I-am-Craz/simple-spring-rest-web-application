@@ -35,7 +35,7 @@
         </section>
 
         <section th:if="${#httpServletRequest.isUserInRole('ROLE_USER')}"
-                 th:with="posts=${user.getPosts()}" th:object="${user}" class="col-6">
+                 th:with="posts=${posts}" th:object="${user}" class="col-6">
             <h2 th:if="${posts.size() > 0}" class="text-center">Your posts</h2>
             <h2 th:unless="${posts.size() > 0}" class="text-center">You have yet to write any posts.</h2>
             <div th:insert="fragments/posts_list :: ul(posts=${posts})" class="mt-2 scroll h-60"></div>

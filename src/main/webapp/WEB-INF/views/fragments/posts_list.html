@@ -1,6 +1,8 @@
-<ul th:fragment="ul(posts)" class="post-list" xmlns:th="https://www.thymeleaf.org/" th:if="${posts.size() > 0}">
+<ul th:fragment="ul(posts)" class="post-list" xmlns:th="https://www.thymeleaf.org/"
+    th:if="${posts.size() > 0}">
 
-    <li th:each="post : ${posts}" th:if="${post.isEnabled()} AND ${#httpServletRequest.isUserInRole('ROLE_USER')}"
+    <li th:each="post : ${posts}"
+        th:if="${post.isEnabled()} AND ${#httpServletRequest.isUserInRole('ROLE_USER')}"
         class="post-list__item">
 
         <div class="post-list__item-image">
@@ -9,7 +11,7 @@
 
         <div class="post-list__item-content p-3 centered-column">
             <h3 th:text="${post.getTitle()}" class="post-list__item-content__title">title</h3>
-            <p th:text="${post.getContent().length() < 350 ? post.getContent() : post.getContent().substring(0, 350) + '...'}"
+            <p th:text="${post.getContent().substring(0, 350) + '...'}"
                class="post-list__item-content__content">content</p>
 
             <a class="btn rounded-pill w-100 text-center post-list__item-content__link"

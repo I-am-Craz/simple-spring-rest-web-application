@@ -4,6 +4,7 @@ import org.example.exception_handling.exceptions.PostNotFoundException;
 import org.example.exception_handling.exceptions.UserAlreadyExistsException;
 import org.example.exception_handling.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,8 +25,14 @@ public class GlobalExceptionController {
 
     @ExceptionHandler({UserAlreadyExistsException.class})
     public ModelAndView alreadyExistsHandler(Exception e){
-        return createModelAndView( HttpStatus.CONTINUE.value(),
+        return createModelAndView( HttpStatus.CONFLICT.value(),
                 HttpStatus.CONFLICT.getReasonPhrase(), e.getMessage());
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    public ModelAndView accessDeniedHandler(Exception e){
+        return createModelAndView( HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase(), e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

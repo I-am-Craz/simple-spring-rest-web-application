@@ -22,7 +22,7 @@ public class PostServiceImp implements PostService {
     @Override
     @Transactional
     public List<Post> getAllPost() {
-        return (List<Post>) postRepository.findAll();
+        return postRepository.findAll();
     }
 
     @Override
@@ -32,6 +32,11 @@ public class PostServiceImp implements PostService {
             throw new PostNotFoundException("Post with the ID " + id + " is not found.");
         }
         return optional.get();
+    }
+
+    @Override
+    public List<Post> getPostsByUserId(Long id) throws PostNotFoundException {
+        return postRepository.findByUserId(id);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class User {
     @Column(name = "enabled")
     private boolean isEnabled;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
     private List<Post> posts;
 
     public void setPosts(List<Post> posts){

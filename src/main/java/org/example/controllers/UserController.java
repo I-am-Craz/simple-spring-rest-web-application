@@ -57,7 +57,11 @@ public class UserController {
                                    @PathVariable("id") Long id,
                                    HttpServletRequest request) throws ServletException {
         user.setId(id);
+        user.setEnabled(true);
+        user.setRoles(new String[]{Role.ROLE_USER.name()});
+
         userService.saveUser(user);
+
         request.logout();
         return  "redirect:/login";
     }

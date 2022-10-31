@@ -41,9 +41,9 @@ public class SecurityConfig{
         httpSecurity
                 .authorizeRequests()
                     .antMatchers("/", "/signup", "/users/create").permitAll()
-                    .regexMatchers("/users/(\\\\d+)/block", "/posts/(\\\\d+)/block")
+                    .regexMatchers("/users/(\\d+)/block", "/posts/(\\d+)/block")
                     .hasAnyRole(Role.ROLE_MODER.getAuthority(), Role.ROLE_ADMIN.getAuthority())
-                    .regexMatchers("/posts/create", "/posts/(\\\\d+)/update")
+                    .regexMatchers("/posts/create", "/posts/(\\d+)/update")
                     .hasRole(Role.ROLE_USER.getAuthority())
                     .anyRequest().authenticated()
                     .and()

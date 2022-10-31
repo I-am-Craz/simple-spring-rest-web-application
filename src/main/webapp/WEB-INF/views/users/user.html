@@ -28,12 +28,24 @@
                           moder_role=${T(org.example.entities.Role).ROLE_MODER},
                           user_role=${T(org.example.entities.Role).ROLE_USER}">
 
+
             <div th:if="${#lists.contains(user.getRoles(), user_role.name())}">
                 <h1 th:text="'This is' + ' ' + ${user.getUsername()} + '.'">user</h1>
-                <h2 th:if="${user.getPosts().size() > 0}" th:text="'And there are' + ' '
+
+                <div th:if="${user.isEnabled()}">
+                    <h2 th:if="${user.getPosts().size() > 0}" th:text="'And there are' + ' '
                     + ${user.getUsername().trim()} + '\'s' + ' ' + 'posts here'">subtitle</h2>
-                <h2 th:unless="${user.getPosts().size() > 0}" th:text="${user.getUsername()}
+
+                    <h2 th:unless="${user.getPosts().size() > 0}" th:text="${user.getUsername()}
                     + ' has yet to write any post.'">subtitle</h2>
+
+                    <h3 th:text="'And this is' + ' ' + ${user.getUsername().trim()} + '\'s' + ' ' + 'email' + ' '
+                    + ':' + ' ' + ${user.getEmail()}"></h3>
+
+                    <div th:replace="fragments/posts_list :: ul(posts=${user.getPosts()})"></div>
+                </div>
+
+                <h2 th:unless="${user.isEnabled}" th:text="${user.getUsername()} + ' is blocked.'"></h2>
             </div>
 
             <div th:unless="${#lists.contains(user.getRoles(), user_role.name())}">
@@ -42,22 +54,26 @@
                 <ul>
                     <li class="large-text" th:each="role : ${user.getRoles()}" th:text="${role}"></li>
                 </ul>
+                <h3 th:if="${!user.isEnabled()}">This user is blocked.</h3>
+                <h3 th:text="'This is' + ' ' + ${user.getUsername().trim()} + '\'s' + ' ' + 'email' + ' '
+                    + ':' + ' ' + ${user.getEmail()}"></h3>
             </div>
 
-            <div>
+            <div th:if="${!user.isEnabled()} AND ${!#httpServletRequest.isUserInRole('ROLE_USER')}">
+                <h2 th:if="${user.getPosts().size() > 0}" th:text="'And there are' + ' '
+                    + ${user.getUsername().trim()} + '\'s' + ' ' + 'posts here'">subtitle</h2>
+
+                <h2 th:unless="${user.getPosts().size() > 0}" th:text="${user.getUsername()}
+                    + ' has yet to write any post.'">subtitle</h2>
+
                 <h3 th:text="'And this is' + ' ' + ${user.getUsername().trim()} + '\'s' + ' ' + 'email' + ' '
-                + ':' + ' ' + ${user.getEmail()}"></h3>
+                    + ':' + ' ' + ${user.getEmail()}"></h3>
+
+                <div th:replace="fragments/posts_list :: ul(posts=${user.getPosts()})"></div>
             </div>
 
         </section>
-
-        <section>
-            <th:block th:if="${#httpServletRequest.isUserInRole('ROLE_USER')}"
-                      th:replace="fragments/posts_list :: ul(posts=${user.getPosts()})"/>
-        </section>
-
     </main>
-
     <th:block th:replace="fragments/script.html :: script"/>
 </body>
 </html>

@@ -7,6 +7,7 @@ import org.example.exception_handling.exceptions.UserNotFoundException;
 import org.example.services.PostService;
 import org.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,13 +48,16 @@ public class PostController {
             throws UserNotFoundException{
         post.setUser(user);
         post.setEnabled(true);
+        user.getPosts().add(post);
         postService.savePost(post);
         return "redirect:/posts";
     }
 
     @GetMapping("/{id}/update")
-    public String getEditPage(@PathVariable("id") Long id, Model model)
-            throws PostNotFoundException{
+    @PreAuthorize("isOwner(#id, #user)")
+    public String getEditPage(@PathVariable("id") Long id,
+                              @AuthenticationPrincipal(expression = "user") User user,
+                              Model model) throws PostNotFoundException{
         Post post = postService.getPostById(id);
         model.addAttribute("post", post);
         return "posts/update";
@@ -62,15 +66,18 @@ public class PostController {
     @PatchMapping("/{id}")
     public String updatePost(@ModelAttribute("post") Post post,
                              @PathVariable("id") Long id,
-                             @AuthenticationPrincipal(expression = "user") User user){
+                             @AuthenticationPrincipal(expression = "user") User user) {
         post.setId(id);
         post.setUser(user);
+        post.setEnabled(true);
         postService.savePost(post);
         return "redirect:/profile";
     }
 
     @DeleteMapping("/{id}")
-    public String deletePost(@PathVariable("id") Long id){
+    public String deletePost(@PathVariable("id") Long id,
+                             @AuthenticationPrincipal(expression = "user") User user){
+        user.getPosts().remove(postService.getPostById(id));
         postService.deletePostById(id);
         return "redirect:/posts";
     }

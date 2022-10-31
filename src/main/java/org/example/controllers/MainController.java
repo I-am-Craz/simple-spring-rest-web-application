@@ -3,6 +3,8 @@ package org.example.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entities.User;
 import org.example.exception_handling.exceptions.UserNotFoundException;
+import org.example.services.PostService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @Slf4j
 public class MainController {
+    @Autowired
+    private PostService postService;
     @GetMapping("/")
     public String homePage(){
         return "index";
@@ -41,6 +45,7 @@ public class MainController {
                                  @AuthenticationPrincipal(expression = "user") User user)
             throws UserNotFoundException {
         model.addAttribute("user", user);
+        model.addAttribute("posts", postService.getPostsByUserId(user.getId()));
         return "users/profile";
     }
 
